@@ -1,34 +1,33 @@
-import Link from 'next/link';
-import Image from 'next/image';
+import Link from "next/link";
+import Image from "next/image";
 import Layout from "@/components/Layout";
 import { API_URL } from "@/config/index";
 import styles from "@/styles/Event.module.css";
 export default function EventPage({ evt }) {
-
-	const deleteEvent = (e) =>{
-		console.log('Delete');
-	}
+	const deleteEvent = (e) => {
+		console.log("Delete");
+	};
 
 	return (
 		<Layout>
-		<div className={styles.event}>
-			<div className={styles.controls} >
-				<Link href={`/events/edit/${evt.id}`}>
-					<a>
-						<i className="fas fa-pencil-alt"></i> Edit Event
+			<div className={styles.event}>
+				<div className={styles.controls}>
+					<Link href={`/events/edit/${evt.id}`}>
+						<a>
+							<i className='fas fa-pencil-alt'></i> Edit Event
+						</a>
+					</Link>
+					<a href='#' className={styles.delete} onClick={deleteEvent}>
+						<i className='fas fa-times'></i> Delete Event
 					</a>
-				</Link>
-				<a href="#" className={styles.delete} onClick={deleteEvent} >
-					<i className="fas fa-times"></i> Delete Event
-				</a>
-			</div>
-			<span>
-				{evt.date} at {evt.time}
-			</span>
-			<h1>{evt.name}</h1>
+				</div>
+				<span>
+					{new Date(evt.date).toLocaleDateString('en-Uk')} at {evt.time}
+				</span>
+				<h1>{evt.name}</h1>
 				{evt.image && (
 					<div className={styles.image}>
-						<Image src={evt.image} width={960} height={600} alt="" />
+						<Image src={evt.image.formats.large.url} width={960} height={600} alt='' />
 					</div>
 				)}
 
@@ -38,49 +37,47 @@ export default function EventPage({ evt }) {
 				<p>{evt.description}</p>
 				<h3>Venue: {evt.venue}</h3>
 				<p>{evt.address}</p>
-				<Link href="/events">
-					<a className={styles.back}>
-						Go Back
-					</a>
+				<Link href='/events'>
+					<a className={styles.back}>Go Back</a>
 				</Link>
-		</div>
+			</div>
 		</Layout>
 	);
 }
 
-export async function getStaticPaths() {
-	const res = await fetch(`${API_URL}/api/events`);
-	const events = await res.json();
+// export async function getStaticPaths() {
+// 	const res = await fetch(`${API_URL}/events`);
+// 	const events = await res.json();
 
-	const paths = events.map((evt) => ({
-		params: { slug: evt.slug },
-	}));
+// 	const paths = events.map((evt) => ({
+// 		params: { slug: evt.slug },
+// 	}));
 
-	return {
-		paths,
-		fallback:false
-	}
-}
-export async function getStaticProps({ params: { slug } }) {
-	console.log(slug);
-
-	const res = await fetch(`${API_URL}/api/events/${slug}`);
-	const events = await res.json();
-	return {
-		props: {
-			evt: events[0],
-		},
-	};
-}
-
-// export async function getServerSideProps({query:{slug}}){
+// 	return {
+// 		paths,
+// 		fallback: false,
+// 	};
+// }
+// export async function getStaticProps({ params: { slug } }) {
 // 	console.log(slug);
 
 // 	const res = await fetch(`${API_URL}/api/events/${slug}`);
 // 	const events = await res.json();
 // 	return {
-// 		props:{
-// 			evt:events[0]
-// 		}
-// 	}
+// 		props: {
+// 			evt: events[0],
+// 		},
+// 	};
 // }
+
+export async function getServerSideProps({query:{slug}}){
+	console.log(slug);
+
+	const res = await fetch(`${API_URL}/events?slug=${slug}`);
+	const events = await res.json();
+	return {
+		props:{
+			evt:events[0]
+		}
+	}
+}
