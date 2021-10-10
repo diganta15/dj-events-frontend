@@ -8,6 +8,7 @@ import Image from "next/image"
 import { API_URL } from "@/config/index";
 import Layout from "@/components/Layout";
 import Modal from "@/components/Modal";
+import ImageUpload from "@/components/ImageUpload";
 import styles from "@/styles/Form.module.css";
 export default function EditEventsPage({evt}) {
     const [values, setValues] = useState({
@@ -53,6 +54,14 @@ export default function EditEventsPage({evt}) {
         }
     }
 
+    const imageUploaded = async(e) =>{
+        const res = await fetch(`${API_URL}/events/${evt.id}`);
+        const data = await res.json();
+        console.log(data)
+        setImagePreview(data.image.formats.thumbnail.url);
+        setShowModal(false);
+    }
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
 
@@ -84,7 +93,7 @@ export default function EditEventsPage({evt}) {
                         <label htmlFor="address">Address</label>
                         <input type="text" name="address" id="address" value={values.address} onChange={handleInputChange} />
                     </div>
-                    <div>
+                    <div>   
                         <label htmlFor="date">Date</label>
                         <input type="date" name="date" id="date" value={moment(values.date).format('yyyy-MM-DD')} onChange={handleInputChange} />
                     </div>
@@ -111,7 +120,7 @@ export default function EditEventsPage({evt}) {
             </div>
 
             <Modal show={showModal} onClose={()=> setShowModal(false)} >
-                IMAGE UPLOAD
+                <ImageUpload evt={evt.id} imageUploaded={imageUploaded} />
             </Modal>
         </Layout>
 
