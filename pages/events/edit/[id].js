@@ -35,7 +35,7 @@ export default function EditEventsPage({evt}) {
         if (hasEmptyFields) {
             toast.error('Please Fill All Fields');
         }
-        else {
+        
             const res = await fetch(`${API_URL}/events/${evt.id}`, {
                 method: 'PUT',
                 headers: {
@@ -51,7 +51,7 @@ export default function EditEventsPage({evt}) {
                 const evt = await res.json();
                 router.push(`/events/${evt.slug}`);
             }
-        }
+        
     }
 
     const imageUploaded = async(e) =>{
@@ -120,7 +120,7 @@ export default function EditEventsPage({evt}) {
             </div>
 
             <Modal show={showModal} onClose={()=> setShowModal(false)} >
-                <ImageUpload evt={evt.id} imageUploaded={imageUploaded} />
+                <ImageUpload evtId={evt.id} imageUploaded={imageUploaded} />
             </Modal>
         </Layout>
 

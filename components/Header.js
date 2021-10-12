@@ -19,7 +19,10 @@ export default function Header() {
                         </Link>
                     </li>
                     <li>
-                        <Link href="/events/add">Add Event</Link>
+                        <Link href="/events/add"><a>Add Event</a></Link>
+                    </li>
+                    <li>
+                        <Link href="/account/login"><a className="btn-secondary btn-icon"><i className="fas fa-sign-in-alt"></i> Login</a></Link>
                     </li>
                 </ul>
             </nav>
